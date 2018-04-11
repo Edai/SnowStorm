@@ -2,8 +2,8 @@
 // Created by edai on 20/03/18.
 //
 
-#ifndef ASSIGNMENT2_GRAPHICALCORE_HPP
-#define ASSIGNMENT2_GRAPHICALCORE_HPP
+#ifndef ASSIGNMENT_GRAPHICALCORE_HPP
+#define ASSIGNMENT_GRAPHICALCORE_HPP
 
 #include "Application.hpp"
 
@@ -11,11 +11,11 @@ class GraphicalCore
 {
 public:
     bool Run(int ac, char **av, Options *options);
-    static int xOrigin;
-    static int yOrigin;
-    static void mouseButton(int button, int state, int x, int y);
+
+    /* OpenGL functions */
+    static void MouseButton(int button, int state, int x, int y);
     static void UpdateGl();
-    static void mouseMove(int x, int y);
+    static void MouseMove(int x, int y);
     static void _KeyboardHandle(unsigned char key, int x, int y)
     {
         GraphicalCore::Instance()->KeyboardHandle(key, x, y);
@@ -53,4 +53,4 @@ public:
     static void Menu(int value);
 };
 
-#endif //ASSIGNMENT2_GRAPHICALCORE_HPP
+#endif //ASSIGNMENT_GRAPHICALCORE_HPP

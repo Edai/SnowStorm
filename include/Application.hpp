@@ -2,8 +2,8 @@
 // Created by edai on 19/03/18.
 //
 
-#ifndef ASSIGNMENT2_APPLICATION_HPP
-#define ASSIGNMENT2_APPLICATION_HPP
+#ifndef ASSIGNMENT_APPLICATION_HPP
+#define ASSIGNMENT_APPLICATION_HPP
 
 #include <GL/gl.h>
 #include <GL/glut.h>
@@ -17,7 +17,9 @@
 
 #define DEFAULT_WIDTH 960
 #define DEFAULT_HEIGHT 960
-#define WINDOW_TITLE "Pyramid - Valentin KAO - 2017280242"
+#define WINDOWPOS_X 500
+#define WINDOWPOS_Y 50
+#define WINDOW_TITLE "Valentin KAO - 2017280242"
 
 struct Options
 {

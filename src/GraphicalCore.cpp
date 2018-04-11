@@ -5,8 +5,6 @@
 #include <Engine.hpp>
 
 GraphicalCore* GraphicalCore::instance = nullptr;
-int GraphicalCore::xOrigin = -1;
-int GraphicalCore::yOrigin = -1;
 
 void GraphicalCore::Init()
 {
@@ -17,55 +15,11 @@ void GraphicalCore::Init()
     glMatrixMode(GL_PROJECTION);
 }
 
-void GraphicalCore::Menu(int value)
-{
-    if (value == 1 && Engine::Instance()->nb_lines < 128)
-        Engine::Instance()->nb_lines += 1.0f;
-    else if (value == 2 && Engine::Instance()->nb_lines > 0)
-        Engine::Instance()->nb_lines -= 1.0f;
-    else if (value == 3)
-        Engine::Instance()->ReloadColors();
-    glutPostRedisplay();
-}
-
-void GraphicalCore::CreateMenu()
-{
-    glutCreateMenu(GraphicalCore::Menu);
-    glutAddMenuEntry("Add layer", 1);
-    glutAddMenuEntry("Remove layer", 2);
-    glutAddMenuEntry("Change all layers colors", 3);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
-}
-
-
-void GraphicalCore::mouseButton(int button, int state, int x, int y)
-{
-    if (button == GLUT_LEFT_BUTTON)
-    {
-        if (state == GLUT_UP)
-        {
-            xOrigin = -1;
-            yOrigin = -1;
-        }
-        else
-        {
-            xOrigin = x;
-            yOrigin = y;
-        }
-    }
-}
-
-void GraphicalCore::mouseMove(int x, int y)
-{
-    Engine::angleY = (x - xOrigin) * 0.25f;
-    Engine::angleX = (y - yOrigin) * 0.25f;
-}
-
 bool GraphicalCore::Run(int ac, char **av, Options *options)
 {
     glutInit(&ac, av);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH) ;
-    glutInitWindowPosition(0,0);
+    glutInitWindowPosition(WINDOWPOS_X, WINDOWPOS_Y);
     glutInitWindowSize(options->width, options->height);
     glutCreateWindow(options->window_name.c_str());
     Init();
@@ -73,8 +27,8 @@ bool GraphicalCore::Run(int ac, char **av, Options *options)
     glutReshapeFunc(GraphicalCore::Reshape);
     glutSpecialFunc(GraphicalCore::_SpecialKeyHandle);
     glutKeyboardFunc(GraphicalCore::_KeyboardHandle);
-    glutMouseFunc(mouseButton);
-    glutMotionFunc(mouseMove);
+    glutMouseFunc(GraphicalCore::MouseButton);
+    glutMotionFunc(GraphicalCore::MouseMove);
     GraphicalCore::CreateMenu();
     glutMainLoop();
     return (true);
@@ -93,14 +47,6 @@ void GraphicalCore::KeyboardHandle(unsigned char key, int x, int y)
         case 27:
             glutLeaveMainLoop();
             break;
-        case 'r':
-            Engine::angleX = 0;
-            Engine::angleY = 0;
-            Engine::angleZ = 0;
-            break;
-        case ' ':
-            Engine::Instance()->ReloadColors();
-            break;
         default:
             return;
     }
@@ -111,12 +57,8 @@ void GraphicalCore::SpecialKeyHandle(int key, int x, int y)
     switch (key)
     {
         case GLUT_KEY_UP:
-            if (Engine::Instance()->nb_lines < 128)
-            Engine::Instance()->nb_lines += 1.0f;
             break;
         case GLUT_KEY_DOWN:
-            if (Engine::Instance()->nb_lines > 0)
-                Engine::Instance()->nb_lines -= 1.0f;
             break;
         case GLUT_KEY_LEFT:
             break;
@@ -134,6 +76,27 @@ void GraphicalCore::Reshape(int w, int h)
     glLoadIdentity();
     glFrustum(-1.0, 1.0, -1.0, 1.0, 0.0, 5000.0);
     glMatrixMode(GL_MODELVIEW);
+}
+
+void GraphicalCore::Menu(int value)
+{
+    glutPostRedisplay();
+}
+
+void GraphicalCore::CreateMenu()
+{
+    glutCreateMenu(GraphicalCore::Menu);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+
+void GraphicalCore::MouseButton(int button, int state, int x, int y)
+{
+}
+
+void GraphicalCore::MouseMove(int x, int y)
+{
+
 }
 
 GraphicalCore::GraphicalCore() = default;

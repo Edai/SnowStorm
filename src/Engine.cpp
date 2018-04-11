@@ -7,10 +7,6 @@
 #include "Engine.hpp"
 
 Engine *Engine::instance = nullptr;
-GLUquadric* Engine::cylinder = gluNewQuadric();
-GLfloat Engine::angleX = 0;
-GLfloat Engine::angleY = 0;
-GLfloat Engine::angleZ = 0;
 
 Engine::~Engine() = default;
 
@@ -51,80 +47,11 @@ Engine::Engine()
 {
     InitTextures();
     InitLights();
-    InitDisplayList();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_AUTO_NORMAL);
     glEnable(GL_NORMALIZE);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_COLOR_MATERIAL);
-    nb_lines = 5;
-}
-
-void Engine::LoadDisplayList(int nb)
-{
-    for (int i = 0; i < nb; i++)
-    {
-        glPushMatrix();
-        glTranslatef(0.165f * (float)i, 0.0f, 0.0f);
-        glCallList((*indexes)[0]);
-        glPopMatrix();
-    }
-}
-
-void Engine::ReloadColors()
-{
-    static std::random_device rd;
-    static std::mt19937 e(rd());
-    static std::uniform_real_distribution<> dist(0.05f, 1.0f);
-
-    colors->clear();
-    for (int i = 1; i < NB_LIST; i++)
-    {
-        colors->push_back(dist(e));
-        colors->push_back(dist(e));
-        colors->push_back(dist(e));
-    }
-}
-
-void Engine::LoadConeCylinder()
-{
-    glPushMatrix();
-    gluQuadricDrawStyle(cylinder, GLU_FILL);
-    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, (*textures)[0]);
-    gluQuadricTexture(cylinder, GL_TRUE);
-    gluQuadricNormals(cylinder, GLU_SMOOTH);
-    gluCylinder(cylinder, 0.08f, 0.08f, 0.25f, 50, 50);
-    glPopMatrix();
-    glPushMatrix();
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    gluCylinder(cylinder, 0.08f, 0.0f, 0.25f, 50, 50);
-    glPopMatrix();
-}
-
-void Engine::InitDisplayList()
-{
-    static std::random_device rd;
-    static std::mt19937 e(rd());
-    static std::uniform_real_distribution<> dist(0.05f, 1.0f);
-
-    indexes = new std::vector<GLuint>();
-    colors = new std::vector<GLfloat>();
-    GLuint n = glGenLists(NB_LIST);
-    glNewList(n, GL_COMPILE);
-    LoadConeCylinder();
-    glEndList();
-    indexes->push_back(n);
-    for (int i = 1; i < NB_LIST; i++)
-    {
-        colors->push_back(dist(e));
-        colors->push_back(dist(e));
-        colors->push_back(dist(e));
-        glNewList(n + i, GL_COMPILE);
-        LoadDisplayList(i);
-        glEndList();
-        indexes->push_back(n + i);
-    }
 }
 
 void Engine::InitUpdate()
@@ -146,19 +73,4 @@ void Engine::EndUpdate()
 void Engine::Update()
 {
     glLoadIdentity();
-
-    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
-    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
-    glRotatef(angleZ, 0.0f, 0.0f, 1.0f);
-    gluLookAt(0, -0.3f, -0.5f, 0, 0, -1, 0, 1, 0);
-    for (int i = 0; i < nb_lines; i++)
-    {
-        glColor4f((*colors)[i * 3], (*colors)[i * 3  + 1], (*colors)[i * 3 + 2], 1.0f);
-        glCallList((*indexes)[i + 1]);
-        glTranslatef(0.5f * -0.17f, -0.05f, -0.15f);
-    }
-}
-
-void Engine::PrintInformation()
-{
 }
