@@ -3,7 +3,8 @@ project(SnowStorm)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(SnowStorm src/main.cpp include/Application.hpp src/Application.cpp src/GraphicalCore.cpp include/GraphicalCore.hpp src/Engine.cpp include/Engine.hpp)
+add_executable(SnowStorm src/main.cpp include/Application.hpp src/Application.cpp src/GraphicalCore.cpp include/GraphicalCore.hpp
+        src/Engine.cpp include/Engine.hpp src/ParticleManager.cpp include/ParticleManager.hpp)
 
 FIND_PATH(SOIL_INCLUDE_PATH SOIL/SOIL.h
         /usr/include
@@ -32,9 +33,10 @@ ENDIF(SOIL_INCLUDE_PATH AND SOIL_LIBRARY)
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
 
-include_directories(include/ ${OPENGL_INCLUDE_DIRS} $(SOIL_INCLUDE_PATH) ${GLUT_INCLUDE_DIRS} glm/)
+include_directories(include/ ${OPENGL_INCLUDE_DIRS} $(SOIL_INCLUDE_PATH) ${GLUT_INCLUDE_DIRS}  ${GLEW_INCLUDE_DIRS} glm/)
+target_link_libraries(SnowStorm ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${SOIL_LIBRARY} ${GLEW_LIBRARIES})
 
-target_link_libraries(SnowStorm ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${SOIL_LIBRARY})
-
-configure_file(texture.jpg texture.jpg COPYONLY)
+configure_file(snow1.png snow1.png COPYONLY)
+configure_file(snow2.png snow2.png COPYONLY)

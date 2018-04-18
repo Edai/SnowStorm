@@ -14,22 +14,18 @@ public:
 
     /* OpenGL functions */
     static void MouseButton(int button, int state, int x, int y);
-    static void UpdateGl();
+    static void Update();
     static void MouseMove(int x, int y);
-    static void _KeyboardHandle(unsigned char key, int x, int y)
-    {
-        GraphicalCore::Instance()->KeyboardHandle(key, x, y);
-    }
-    static void _SpecialKeyHandle(int key, int x, int y)
-    {
-        GraphicalCore::Instance()->SpecialKeyHandle(key, x, y);
-    }
+    static void KeyboardHandle(unsigned char key, int x, int y);
+    static void SpecialKeyHandle(int key, int x, int y);
     static void Reshape(int w, int h);
+    static int old_t;
 
 private:
     void Init();
-    void KeyboardHandle(unsigned char, int, int);
-    void SpecialKeyHandle(int key, int x, int y);
+    void CreateMenu(void);
+    static void Menu(int value);
+
     GraphicalCore();
     ~GraphicalCore();
 
@@ -48,9 +44,6 @@ public:
     }
 #pragma
 
-    void CreateMenu(void);
-
-    static void Menu(int value);
 };
 
 #endif //ASSIGNMENT_GRAPHICALCORE_HPP

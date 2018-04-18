@@ -5,14 +5,16 @@
 #include <Engine.hpp>
 
 GraphicalCore* GraphicalCore::instance = nullptr;
+int GraphicalCore::old_t = 0;
 
 void GraphicalCore::Init()
 {
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glShadeModel(GL_SMOOTH);
-    glDepthFunc(GL_LEQUAL);
-    glEnable(GL_DEPTH_TEST);
+//    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+//    glShadeModel(GL_SMOOTH);
+//    glDepthFunc(GL_LEQUAL);
+//    glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION);
+    old_t = glutGet(GLUT_ELAPSED_TIME);
 }
 
 bool GraphicalCore::Run(int ac, char **av, Options *options)
@@ -22,11 +24,14 @@ bool GraphicalCore::Run(int ac, char **av, Options *options)
     glutInitWindowPosition(WINDOWPOS_X, WINDOWPOS_Y);
     glutInitWindowSize(options->width, options->height);
     glutCreateWindow(options->window_name.c_str());
+    GLenum err = glewInit();
+    if (GLEW_OK != err)
+        fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
     Init();
-    glutIdleFunc(Engine::_Update);
+    glutIdleFunc(GraphicalCore::Update);
     glutReshapeFunc(GraphicalCore::Reshape);
-    glutSpecialFunc(GraphicalCore::_SpecialKeyHandle);
-    glutKeyboardFunc(GraphicalCore::_KeyboardHandle);
+    glutSpecialFunc(GraphicalCore::SpecialKeyHandle);
+    glutKeyboardFunc(GraphicalCore::KeyboardHandle);
     glutMouseFunc(GraphicalCore::MouseButton);
     glutMotionFunc(GraphicalCore::MouseMove);
     GraphicalCore::CreateMenu();
@@ -34,8 +39,13 @@ bool GraphicalCore::Run(int ac, char **av, Options *options)
     return (true);
 }
 
-void GraphicalCore::UpdateGl()
+void GraphicalCore::Update()
 {
+    int t = glutGet(GLUT_ELAPSED_TIME);
+    float dt = (t - old_t) / 1000.0f;
+
+    old_t = t;
+    Engine::Instance()->Update(dt);
     glutSwapBuffers();
     glutPostRedisplay();
 }

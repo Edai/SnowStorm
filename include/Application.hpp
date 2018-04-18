@@ -5,6 +5,7 @@
 #ifndef ASSIGNMENT_APPLICATION_HPP
 #define ASSIGNMENT_APPLICATION_HPP
 
+#include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <GL/freeglut.h>
