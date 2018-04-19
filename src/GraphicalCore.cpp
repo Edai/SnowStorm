@@ -9,10 +9,12 @@ int GraphicalCore::old_t = 0;
 
 void GraphicalCore::Init()
 {
-//    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 //    glShadeModel(GL_SMOOTH);
 //    glDepthFunc(GL_LEQUAL);
 //    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glMatrixMode(GL_PROJECTION);
     old_t = glutGet(GLUT_ELAPSED_TIME);
 }

@@ -54,6 +54,8 @@ public:
         return instance;
     }
     #pragma
+
+    void PutSnow(glm::vec2 &s);
 };
 
 #endif //SNOWSTORM_PARTICLEMANAGER_HPP
