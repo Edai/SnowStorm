@@ -38,5 +38,6 @@ find_package(GLEW REQUIRED)
 include_directories(include/ ${OPENGL_INCLUDE_DIRS} $(SOIL_INCLUDE_PATH) ${GLUT_INCLUDE_DIRS}  ${GLEW_INCLUDE_DIRS} glm/)
 target_link_libraries(SnowStorm ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${SOIL_LIBRARY} ${GLEW_LIBRARIES})
 
-configure_file(snow1.png snow1.png COPYONLY)
+configure_file(snow.png snow.png COPYONLY)
+configure_file(snow1.png snow2.png COPYONLY)
 configure_file(snow2.png snow2.png COPYONLY)

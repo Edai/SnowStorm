@@ -20,6 +20,7 @@ public:
     static void SpecialKeyHandle(int key, int x, int y);
     static void Reshape(int w, int h);
     static int old_t;
+    static int speedFactor;
 
 private:
     void Init();

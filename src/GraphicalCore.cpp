@@ -6,15 +6,15 @@
 
 GraphicalCore* GraphicalCore::instance = nullptr;
 int GraphicalCore::old_t = 0;
+int GraphicalCore::speedFactor = 1;
 
 void GraphicalCore::Init()
 {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-//    glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
 //    glDepthFunc(GL_LEQUAL);
 //    glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glMatrixMode(GL_PROJECTION);
     old_t = glutGet(GLUT_ELAPSED_TIME);
 }
@@ -26,9 +26,6 @@ bool GraphicalCore::Run(int ac, char **av, Options *options)
     glutInitWindowPosition(WINDOWPOS_X, WINDOWPOS_Y);
     glutInitWindowSize(options->width, options->height);
     glutCreateWindow(options->window_name.c_str());
-    GLenum err = glewInit();
-    if (GLEW_OK != err)
-        fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
     Init();
     glutIdleFunc(GraphicalCore::Update);
     glutReshapeFunc(GraphicalCore::Reshape);
@@ -47,6 +44,7 @@ void GraphicalCore::Update()
     float dt = (t - old_t) / 1000.0f;
 
     old_t = t;
+    dt = dt * speedFactor;
     Engine::Instance()->Update(dt);
     glutSwapBuffers();
     glutPostRedisplay();
@@ -69,8 +67,11 @@ void GraphicalCore::SpecialKeyHandle(int key, int x, int y)
     switch (key)
     {
         case GLUT_KEY_UP:
+            speedFactor += 1;
             break;
         case GLUT_KEY_DOWN:
+            if (speedFactor > 1)
+                speedFactor -= 1;
             break;
         case GLUT_KEY_LEFT:
             break;

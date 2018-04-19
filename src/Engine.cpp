@@ -32,23 +32,23 @@ Engine::Engine()
     // InitLights();
     // glEnable(GL_DEPTH_TEST);
     ParticleManager::Instance()->LoadTexture();
-    glEnable(GL_AUTO_NORMAL);
-    glEnable(GL_NORMALIZE);
-    glShadeModel(GL_SMOOTH);
-    glDepthMask(GL_FALSE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  //  glEnable(GL_AUTO_NORMAL);
+//    glEnable(GL_NORMALIZE);
+//    glShadeModel(GL_SMOOTH);
+//    glDepthMask(GL_FALSE);
 }
 
 void Engine::Update(float dt)
 {
     //    glEnable(GL_LIGHTING);
-    //    glEnable(GL_LIGHT0);
-    //    glEnable(GL_TEXTURE_2D);
+    //    glEnable(GL_LIGHT0)
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     ParticleManager::Instance()->Render(dt);
     //    glDisable(GL_LIGHTING);
     //    glDisable(GL_LIGHT0);
-    //    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_TEXTURE_2D);
 }

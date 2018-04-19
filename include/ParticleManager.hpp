@@ -12,15 +12,17 @@
 #include <random>
 #include <SOIL/SOIL.h>
 
-#define TEXTURES_NAME "snow1.jpg"
+#define TEXTURES_NAME "snow.png"
+#define SNOW_SIZE 0.05f
+#define MAX_PARTICLES 100000
 
 struct Particle {
     glm::vec2 Position, Velocity;
-    GLfloat Life;
+    GLfloat Size;
 
-    Particle() : Position(0.0f), Velocity(0.0f), Life(0.0f){
+    Particle() : Position(0.0f), Velocity(0.0f), Size(0.0f){
     }
-    Particle(glm::vec2 p, glm::vec2 v, GLfloat l) : Position(p), Velocity(v), Life(l){
+    Particle(glm::vec2 p, glm::vec2 v, GLfloat l) : Position(p), Velocity(v), Size(l){
     }
 };
 
@@ -33,7 +35,7 @@ public:
 private:
     ParticleManager();
     ~ParticleManager() = default;
-    void CreateRandomParticle();
+    void CreateRandomParticle(bool r = true);
 
     int spawnfactor;
     GLuint texture;
@@ -55,7 +57,7 @@ public:
     }
     #pragma
 
-    void PutSnow(glm::vec2 &s);
+    void PutSnow(glm::vec2 &s, float size);
 };
 
 #endif //SNOWSTORM_PARTICLEMANAGER_HPP
