@@ -12,8 +12,8 @@ void GraphicalCore::Init()
 {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glShadeModel(GL_SMOOTH);
-//    glDepthFunc(GL_LEQUAL);
-//    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glMatrixMode(GL_PROJECTION);
     old_t = glutGet(GLUT_ELAPSED_TIME);

@@ -12,7 +12,7 @@
 #include <random>
 #include <SOIL/SOIL.h>
 
-#define TEXTURES_NAME "snow.png"
+#define TEXTURES_NAME "snow1.png"
 #define SNOW_SIZE 0.05f
 #define MAX_PARTICLES 100000
 
@@ -58,6 +58,8 @@ public:
     #pragma
 
     void PutSnow(glm::vec2 &s, float size);
+
+    void ResetPosition(Particle &p);
 };
 
 #endif //SNOWSTORM_PARTICLEMANAGER_HPP

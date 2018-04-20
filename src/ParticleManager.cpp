@@ -12,13 +12,15 @@ ParticleManager::ParticleManager()
 {
     buffer = new std::vector<Particle>();
     spawnfactor = 100;
+    texture = 0;
     for (int i = 0; i < spawnfactor; i++)
         CreateRandomParticle();
 }
 
 void ParticleManager::LoadTexture()
 {
-    texture = SOIL_load_OGL_texture(TEXTURES_NAME, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA);
+    if (texture == 0)
+        texture = SOIL_load_OGL_texture(TEXTURES_NAME, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -32,8 +34,21 @@ void ParticleManager::CreateRandomParticle(bool random)
     static std::uniform_real_distribution<> dis_f(0.05f, 0.15f);
     static std::uniform_real_distribution<> dis_s(SNOW_SIZE  - 0.025f, SNOW_SIZE + 0.05f);
 
-    auto *p = new Particle({dis(gen), random ? dis(gen) : 1.0f + SNOW_SIZE}, {0.0, - dis_f(gen)}, (float)dis_s(gen));
+    auto s =  (float)dis_s(gen);
+    auto *p = new Particle({dis(gen), random ? dis(gen) : 1.0f + s}, {0.0, - dis_f(gen)}, s);
     buffer->push_back(*p);
+}
+
+void ParticleManager::ResetPosition(Particle &p)
+{
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<> dis(-1.0f, 1.0f);
+    static std::uniform_real_distribution<> dis_f(0.05f, 0.15f);
+    static std::uniform_real_distribution<> dis_s(SNOW_SIZE  - 0.025f, SNOW_SIZE + 0.025f);
+
+    p.Velocity = {0.0, - dis_f(gen)};
+    p.Size = (float)dis_s(gen);
+    p.Position = {dis(gen), 1.0f + p.Size};
 }
 
 void ParticleManager::PutSnow(glm::vec2 &s, float size)
@@ -53,8 +68,9 @@ void ParticleManager::Render(float dt)
 {
     static float timer = 0.0f;
 
+    glLoadIdentity();
     timer += dt;
-    if (timer > 0.01f && spawnfactor < MAX_PARTICLES)
+    if (timer > 0.25f && spawnfactor < MAX_PARTICLES)
     {
         CreateRandomParticle(false);
         spawnfactor++;
@@ -65,15 +81,11 @@ void ParticleManager::Render(float dt)
     {
         PutSnow(p->Position, p->Size);
         p->Position += (p->Velocity * dt);
-        if (p->Position.y < -1.0f - SNOW_SIZE)
-        {
-            buffer->erase(p);
-            spawnfactor--;
-        }
+        if (p->Position.y < -1.0f - p->Size)
+            ResetPosition(*p);
         else
             p++;
     }
-    std::cout << spawnfactor << std::endl;
     glEnd();
     glPopMatrix();
 }
