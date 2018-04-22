@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <GraphicalCore.hpp>
 #include "ParticleManager.hpp"
 #include <algorithm>
 
@@ -35,7 +36,9 @@ void ParticleManager::CreateRandomParticle(bool random)
     static std::uniform_real_distribution<> dis_s(SNOW_SIZE  - 0.025f, SNOW_SIZE + 0.05f);
 
     auto s =  (float)dis_s(gen);
-    auto *p = new Particle({dis(gen), random ? dis(gen) : 1.0f + s}, {0.0, - dis_f(gen)}, s);
+    auto *p = new Particle( (*new glm::vec3((float)dis(gen), random ? dis(gen) : 1.0f + s, 0.2)),
+            (*new glm::vec3(0.0, - dis_f(gen), 0.0)),
+                            s);
     buffer->push_back(*p);
 }
 
@@ -46,22 +49,22 @@ void ParticleManager::ResetPosition(Particle &p)
     static std::uniform_real_distribution<> dis_f(0.05f, 0.15f);
     static std::uniform_real_distribution<> dis_s(SNOW_SIZE  - 0.025f, SNOW_SIZE + 0.025f);
 
-    p.Velocity = {0.0, - dis_f(gen)};
+    p.Velocity = *(new glm::vec3(0.0, - dis_f(gen), 0.0f));
     p.Size = (float)dis_s(gen);
-    p.Position = {dis(gen), 1.0f + p.Size};
+    p.Position = *(new glm::vec3(dis(gen), 1.0f + p.Size, 0.2));
 }
 
-void ParticleManager::PutSnow(glm::vec2 &s, float size)
+void ParticleManager::PutSnow(glm::vec3 &s, float size)
 {
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    glTexCoord2i(0, 1);
-    glVertex2f(s.x - size, s.y + size);
-    glTexCoord2i(1, 1);
-    glVertex2f(s.x + size, s.y + size);
-    glTexCoord2i(1, 0);
-    glVertex2f(s.x + size, s.y - size);
-    glTexCoord2i(0, 0);
-    glVertex2f(s.x - size, s.y - size);
+    glTexCoord3f(0.0, 1.0, s.z);
+    glVertex3f(s.x - size, s.y + size, s.z);
+    glTexCoord3f(1.0, 1.0, s.z);
+    glVertex3f(s.x + size, s.y + size, s.z);
+    glTexCoord3f(1.0, 0.0, s.z);
+    glVertex3f(s.x + size, s.y - size, s.z);
+    glTexCoord3f(0.0, 0.0, s.z);
+    glVertex3f(s.x - size, s.y - size, s.z);
 }
 
 void ParticleManager::Render(float dt)

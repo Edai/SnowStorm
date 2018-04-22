@@ -10,12 +10,11 @@ int GraphicalCore::speedFactor = 1;
 
 void GraphicalCore::Init()
 {
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glShadeModel(GL_SMOOTH);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glMatrixMode(GL_PROJECTION);
+    glShadeModel(GL_SMOOTH);
     old_t = glutGet(GLUT_ELAPSED_TIME);
 }
 
@@ -87,7 +86,7 @@ void GraphicalCore::Reshape(int w, int h)
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glFrustum(-1.0, 1.0, -1.0, 1.0, 0.0, 5000.0);
+    glFrustum(-1.0, 1.0, -1.0, 1.0, 0.0, 500);
     glMatrixMode(GL_MODELVIEW);
 }
 

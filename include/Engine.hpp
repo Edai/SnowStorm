@@ -17,21 +17,13 @@ class Engine
 {
 public:
     Engine();
-    ~Engine();
+    ~Engine() = default;
     void Update(float dt);
 
-    enum SKYBOX_ORIENTATION {
-        NEGATIVE_X, //bk
-        POSITIVE_X, //lf
-        NEGATIVE_Y, //dn
-        POSITIVE_Y, //up
-        NEGATIVE_Z, //rt
-        POSITIVE_Z //ft
-    };
-
 private:
-    void InitLights();
-    GLuint skybox[6];
+    void InitBackground();
+    void DrawBackground();
+    GLuint background;
 
 #pragma SINGLETON
 private:
@@ -49,8 +41,6 @@ public:
 
 #pragma END SINGLETON
 
-    void InitSkybox();
-    void DisplaySkybox();
 };
 
 #endif //ENGINE_HPP
